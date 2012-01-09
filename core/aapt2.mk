@@ -65,7 +65,7 @@ $(my_res_package) : $(my_res_resources_flat) $(my_overlay_resources_flat) \
 
 ifdef R_file_stamp
 $(R_file_stamp) : $(my_res_package) | $(ACP)
-	@echo "target R.java/Manifest.java: $(PRIVATE_MODULE) ($@)"
+	@echo ${CL_YLW}"target R.java/Manifest.java:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 	@rm -rf $@ && mkdir -p $(dir $@)
 	$(call find-generated-R.java)
 endif

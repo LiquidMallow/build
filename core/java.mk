@@ -412,7 +412,7 @@ ifdef full_classes_jar
 #   PRIVATE_ vars to be preserved.
 $(full_classes_stubs_jar): PRIVATE_SOURCE_FILE := $(full_classes_jar)
 $(full_classes_stubs_jar) : $(full_classes_jar) | $(ACP)
-	@echo Copying $(PRIVATE_SOURCE_FILE)
+	@echo ${CL_GRN}"Copying"${CL_RST}" $(PRIVATE_SOURCE_FILE)"
 	$(hide) $(ACP) -fp $(PRIVATE_SOURCE_FILE) $@
 ALL_MODULES.$(LOCAL_MODULE).STUBS := $(full_classes_stubs_jar)
 
@@ -451,11 +451,11 @@ $(full_classes_compiled_jar): \
 ifneq ($(strip $(LOCAL_JARJAR_RULES)),)
 $(full_classes_jarjar_jar): PRIVATE_JARJAR_RULES := $(LOCAL_JARJAR_RULES)
 $(full_classes_jarjar_jar): $(full_classes_compiled_jar) $(LOCAL_JARJAR_RULES) | $(JARJAR)
-	@echo JarJar: $@
+	@echo ${CL_GRN}"JarJar:"${CL_RST}" $@"
 	$(hide) java -jar $(JARJAR) process $(PRIVATE_JARJAR_RULES) $< $@
 else
 $(full_classes_jarjar_jar): $(full_classes_compiled_jar) | $(ACP)
-	@echo Copying: $@
+	@echo ${CL_GRN}"Copying:"${CL_RST}" $@"
 	$(hide) $(ACP) -fp $< $@
 endif
 
@@ -483,7 +483,7 @@ endif
 
 # Keep a copy of the jar just before proguard processing.
 $(full_classes_jar): $(full_classes_jar_source) | $(ACP)
-	@echo Copying: $@
+	@echo ${CL_GRN}"Copying:"${CL_RST}" $@"
 	$(hide) $(ACP) -fp $< $@
 
 $(call define-jar-to-toc-rule, $(full_classes_jar))
@@ -619,7 +619,7 @@ endif
 endif # LOCAL_JACK_ENABLED is disabled
 
 $(built_dex): $(built_dex_intermediate) | $(ACP)
-	@echo Copying: $@
+	@echo ${CL_GRN}"Copying:"${CL_RST}" $@"
 	$(hide) mkdir -p $(dir $@)
 	$(hide) rm -f $(dir $@)/classes*.dex
 	$(hide) $(ACP) -fp $(dir $<)/classes*.dex $(dir $@)
@@ -704,7 +704,7 @@ $(jack_check_timestamp): $(jack_all_deps) | setup-jack-server
 
 ifeq ($(LOCAL_IS_STATIC_JAVA_LIBRARY),true)
 $(full_classes_jack): $(jack_all_deps) | setup-jack-server
-	@echo Building with Jack: $@
+	@echo ${CL_GRN}"Building with Jack:"${CL_RST}" $@"
 	$(java-to-jack)
 
 # Update timestamps of .toc files for static java libraries so
@@ -727,7 +727,7 @@ $(built_dex_intermediate): PRIVATE_JACK_COVERAGE_OPTIONS :=
 endif
 
 $(built_dex_intermediate): $(jack_all_deps) | setup-jack-server
-	@echo Building with Jack: $@
+	@echo ${CL_GRN}"Building with Jack:"${CL_RST}" $@"
 	$(jack-java-to-dex)
 
 # $(full_classes_jack) is just by-product of $(built_dex_intermediate).
@@ -743,7 +743,7 @@ endif #LOCAL_IS_STATIC_JAVA_LIBRARY
 $(noshrob_classes_jack): PRIVATE_JACK_INTERMEDIATES_DIR := $(intermediates.COMMON)/jack-noshrob-rsc
 $(noshrob_classes_jack): PRIVATE_JACK_PROGUARD_FLAGS :=
 $(noshrob_classes_jack): $(jack_all_deps) | setup-jack-server
-	@echo Building with Jack: $@
+	@echo ${CL_GRN}"Building with Jack:"${CL_RST}" $@"
 	$(java-to-jack)
 endif  # full_classes_jar is defined
 endif # LOCAL_JACK_ENABLED

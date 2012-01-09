@@ -366,7 +366,7 @@ $(R_file_stamp): PRIVATE_RESOURCE_PUBLICS_OUTPUT := \
 			$(intermediates.COMMON)/public_resources.xml
 $(R_file_stamp): PRIVATE_PROGUARD_OPTIONS_FILE := $(proguard_options_file)
 $(R_file_stamp): $(all_res_assets) $(full_android_manifest) $(RenderScript_file_stamp) $(AAPT) | $(ACP)
-	@echo "target R.java/Manifest.java: $(PRIVATE_MODULE) ($@)"
+	@echo ${CL_YLW}"target R.java/Manifest.java:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 	@rm -rf $@ && mkdir -p $(dir $@)
 	$(create-resource-java-files)
 	$(call find-generated-R.java)
@@ -533,7 +533,7 @@ $(LOCAL_BUILT_MODULE) : $(my_res_package) $(AAPT2) | $(ACP)
 else
 $(LOCAL_BUILT_MODULE) : $(all_res_assets) $(full_android_manifest) $(AAPT)
 endif
-	@echo "target Package: $(PRIVATE_MODULE) ($@)"
+	@echo ${CL_GRN} "target Package:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 ifdef LOCAL_USE_AAPT2
 ifdef LOCAL_JACK_ENABLED
 	$(call copy-file-to-new-target)

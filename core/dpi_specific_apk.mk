@@ -50,7 +50,7 @@ $(built_dpi_apk) : $(all_library_res_package_export_deps)
 $(built_dpi_apk) : $(private_key) $(certificate) $(SIGNAPK_JAR)
 $(built_dpi_apk) : $(AAPT)
 $(built_dpi_apk) : $(all_res_assets) $(jni_shared_libraries) $(full_android_manifest)
-	@echo "target Package: $(PRIVATE_MODULE) ($@)"
+	@echo ${CL_GRN}"target Package:"${CL_RST}" $(PRIVATE_MODULE) ($@)"
 	$(if $(PRIVATE_SOURCE_ARCHIVE),\
 	  $(call initialize-package-file,$(PRIVATE_SOURCE_ARCHIVE),$@),\
 	  $(create-empty-package))
