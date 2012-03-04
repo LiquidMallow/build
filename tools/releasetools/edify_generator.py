@@ -131,7 +131,6 @@ class EdifyGenerator(object):
            ");")
     self.script.append(self.WordWrap(cmd))
 
-<<<<<<< HEAD
   def FlashSuperSU(self):
     self.script.append('package_extract_dir("supersu", "/tmp/supersu");')
     self.script.append('run_program("/sbin/busybox", "unzip", "/tmp/supersu/supersu.zip", "META-INF/com/google/android/*", "-d", "/tmp/supersu");')
@@ -141,12 +140,16 @@ class EdifyGenerator(object):
     self.script.append('package_extract_dir("v4a", "/tmp/v4a");')
     self.script.append('run_program("/sbin/busybox", "unzip", "/tmp/v4a/v4a.zip", "META-INF/com/google/android/*", "-d", "/tmp/v4a");')
     self.script.append('run_program("/sbin/busybox", "sh", "/tmp/v4a/META-INF/com/google/android/update-binary", "dummy", "1", "/tmp/v4a/v4a.zip");')
-=======
+
   def RunBackup(self, command):
     self.script.append('package_extract_file("system/bin/backuptool.sh", "/tmp/backuptool.sh");')
+    self.script.append('package_extract_file("system/bin/backuptool.functions", "/tmp/backuptool.functions");')
     self.script.append('set_perm(0, 0, 0777, "/tmp/backuptool.sh");')
+    self.script.append('set_perm(0, 0, 0644, "/tmp/backuptool.functions");')
     self.script.append(('run_program("/tmp/backuptool.sh", "%s");' % command))
->>>>>>> d44afe4... Add otapackage support for backuptool
+    if command == "restore":
+        self.script.append('delete("/system/bin/backuptool.sh");')
+        self.script.append('delete("/system/bin/backuptool.functions");')
 
   def ShowProgress(self, frac, dur):
     """Update the progress bar, advancing it over 'frac' over the next
