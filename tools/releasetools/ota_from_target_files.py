@@ -653,8 +653,16 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
   common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
 
+  if block_based:
+    script.Unmount("/system")
+
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
+
+  script.Print("Flashing Superuser...")
+  common.ZipWriteStr(output_zip, "supersu/supersu.zip",
+                 ""+input_zip.read("SYSTEM/addon.d/UPDATE-SuperSU.zip"))
+  script.FlashSuperSU()
 
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
@@ -686,7 +694,6 @@ endif;
 
 def WritePolicyConfig(file_name, output_zip):
   common.ZipWrite(output_zip, file_name, os.path.basename(file_name))
-
 
 def WriteMetadata(metadata, output_zip):
   common.ZipWriteStr(output_zip, "META-INF/com/android/metadata",
