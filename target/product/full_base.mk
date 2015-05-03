@@ -36,8 +36,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
 PRODUCT_LOCALES := en_US
 
 # Get some sounds
-$(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
-
+$(call inherit-product-if-exists, frameworks/base/data/sounds/GoogleAudio.mk)
 # Get a list of languages.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/locales_full.mk)
 
