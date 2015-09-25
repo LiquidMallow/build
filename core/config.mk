@@ -124,6 +124,10 @@ GLOBAL_CFLAGS_NO_OVERRIDE :=  \
 
 GLOBAL_CPPFLAGS_NO_OVERRIDE :=
 
+# Force gcc to always output color diagnostics.  Ninja will strip the ANSI
+# color codes if it is not running in a terminal.
+COMMON_GLOBAL_CFLAGS += -fdiagnostics-color
+
 # Set the extensions used for various packages
 COMMON_PACKAGE_SUFFIX := .zip
 COMMON_JAVA_PACKAGE_SUFFIX := .jar
