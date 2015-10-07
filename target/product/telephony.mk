@@ -19,6 +19,7 @@
 
 PRODUCT_PACKAGES := \
     CarrierConfig \
+    CellBroadcastReceiver \
     Dialer \
     CallLogBackup \
     Stk \
