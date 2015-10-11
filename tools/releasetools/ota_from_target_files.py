@@ -603,8 +603,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #    complete script normally
   #    (allow recovery to mark itself finished and reboot)
 
-  recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
-                                         OPTIONS.input_tmp, "RECOVERY")
+#  recovery_img = common.GetBootableImage("recovery.img", "recovery.img",
+#                                         OPTIONS.input_tmp, "RECOVERY")
   if OPTIONS.two_step:
     if not OPTIONS.info_dict.get("multistage_support", None):
       assert False, "two-step packages not supported by this build"
@@ -624,8 +624,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 """ % bcb_dev)
 
   # Dump fingerprints
-  script.Print("Target: %s" % CalculateFingerprint(
-      oem_props, oem_dict, OPTIONS.info_dict))
+  #script.Print("Target: %s" % CalculateFingerprint(
+  #    oem_props, oem_dict, OPTIONS.info_dict))
 
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
@@ -674,8 +674,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
       common.ZipWriteStr(output_zip, "recovery/" + fn, data)
       system_items.Get("system/" + fn)
 
-    common.MakeRecoveryPatch(OPTIONS.input_tmp, output_sink,
-                             recovery_img, boot_img)
+#    common.MakeRecoveryPatch(OPTIONS.input_tmp, output_sink,
+#                             recovery_img, boot_img)
 
     system_items.GetMetadata(input_zip)
     system_items.Get("system").SetPermissions(script)
@@ -705,6 +705,11 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   script.ShowProgress(0.05, 5)
   script.WriteRawImage("/boot", "boot.img")
+
+  script.Print("Flashing SuperSU..")
+  common.ZipWriteStr(output_zip, "supersu/supersu.zip",
+                 ""+input_zip.read("SYSTEM/addon.d/UPDATE-SuperSU.zip"))
+  script.FlashSuperSU()
 
   script.ShowProgress(0.2, 10)
   device_specific.FullOTA_InstallEnd()
@@ -1568,12 +1573,13 @@ def WriteIncrementalOTAPackage(target_zip, source_zip, output_zip):
   updating_boot = (not OPTIONS.two_step and
                    (source_boot.data != target_boot.data))
 
-  source_recovery = common.GetBootableImage(
-      "/tmp/recovery.img", "recovery.img", OPTIONS.source_tmp, "RECOVERY",
-      OPTIONS.source_info_dict)
-  target_recovery = common.GetBootableImage(
-      "/tmp/recovery.img", "recovery.img", OPTIONS.target_tmp, "RECOVERY")
-  updating_recovery = (source_recovery.data != target_recovery.data)
+#  source_recovery = common.GetBootableImage(
+#      "/tmp/recovery.img", "recovery.img", OPTIONS.source_tmp, "RECOVERY",
+#      OPTIONS.source_info_dict)
+#  target_recovery = common.GetBootableImage(
+#      "/tmp/recovery.img", "recovery.img", OPTIONS.target_tmp, "RECOVERY")
+#  updating_recovery = (source_recovery.data != target_recovery.data)
+  updating_recovery = false
 
   # Here's how we divide up the progress bar:
   #  0.1 for verifying the start state (PatchCheck calls)
@@ -1813,9 +1819,9 @@ else
     script.Print("Unpacking new vendor files...")
     script.UnpackPackageDir("vendor", "/vendor")
 
-  if updating_recovery and not target_has_recovery_patch:
-    script.Print("Unpacking new recovery...")
-    script.UnpackPackageDir("recovery", "/system")
+#  if updating_recovery and not target_has_recovery_patch:
+#    script.Print("Unpacking new recovery...")
+#    script.UnpackPackageDir("recovery", "/system")
 
   system_diff.EmitRenames(script)
   if vendor_diff:
