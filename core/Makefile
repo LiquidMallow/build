@@ -972,9 +972,13 @@ systemimage-changelog: $(INTERNAL_SYSTEMIMAGE_FILES)
 	@echo -e "Making changelog!"
 	$(hide) APKCERTS=$(APKCERTS_FILE) ./vendor/mallow/tools/changelog
 
-.PHONY: systemimage-changelog
+systemimage-squisher: $(INTERNAL_SYSTEMIMAGE_FILES)
+	@echo -e ${CL_YLW}"Optimizing PNGs to Shrink ROM Size!"${CL_RST}
+	$(hide) APKCERTS=$(APKCERTS_FILE) ./vendor/mallow/tools/squisher $@
 
-FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEPS) systemimage-changelog
+.PHONY: systemimage-changelog systemimage-squisher
+FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEPS) systemimage-changelog systemimage-squisher
+
 # -----------------------------------------------------------------
 # installed file list
 # Depending on anything that $(BUILT_SYSTEMIMAGE) depends on.
