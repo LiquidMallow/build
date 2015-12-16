@@ -1466,14 +1466,26 @@ function set_java_home() {
     fi
 
     if [ ! "$JAVA_HOME" ]; then
-      case `uname -s` in
-          Darwin)
-              export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
-              ;;
-          *)
-              export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
-              ;;
-      esac
+      if [ -n "$LEGACY_USE_JAVA7" ]; then
+        echo Warning: Support for JDK 7 will be dropped. Switch to JDK 8.
+        case `uname -s` in
+            Darwin)
+                export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
+                ;;
+            *)
+                export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+                ;;
+        esac
+      else
+        case `uname -s` in
+            Darwin)
+                export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+                ;;
+            *)
+                export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+                ;;
+        esac
+      fi
 
       # Keep track of the fact that we set JAVA_HOME ourselves, so that
       # we can change it on the next envsetup.sh, if required.

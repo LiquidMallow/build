@@ -104,7 +104,7 @@ include $(BUILD_SYSTEM)/cleanbuild.mk
 # Include the google-specific config
 -include vendor/google/build/config.mk
 
-VERSION_CHECK_SEQUENCE_NUMBER := 5
+VERSION_CHECK_SEQUENCE_NUMBER := 6
 -include $(OUT_DIR)/versions_checked.mk
 ifneq ($(VERSION_CHECK_SEQUENCE_NUMBER),$(VERSIONS_CHECKED))
 
@@ -171,7 +171,7 @@ endif
 
 # Check for the current JDK.
 #
-# For Java 1.7, we require OpenJDK on linux and Oracle JDK on Mac OS.
+# For Java 1.7/1.8, we require OpenJDK on linux and Oracle JDK on Mac OS.
 requires_openjdk := false
 ifeq ($(HOST_OS), linux)
 requires_openjdk := true
