@@ -66,11 +66,14 @@ DISABLE_POLLY_arm := \
   libLLVMScalarOpts \
   libLLVMSupport \
   libLLVMMC \
+  libmcldTarget \
   libmedia \
   libminui \
   libpng \
   libprotobuf-cpp-lite \
   libRSCpuRef \
+  libRSSupport \
+  libstagefright_omx \
   libRS	\
   libRSDrive
 
@@ -114,7 +117,9 @@ ifeq (1,$(words $(filter 3.8 3.9 4.0,$(LLVM_PREBUILTS_VERSION))))
 	libprotobuf-cpp-lite \
 	libRS \
 	libRSCpuRef \
+        libstagefright_omx \
 	libunwind_llvm \
+	libv8 \
 	libvixl \
 	libvterm \
 	libxml2
@@ -156,6 +161,47 @@ ifeq ($(my_clang),true)
       my_cflags += -O3 $(POLLY)
     else
       my_cflags += -O3
+    endif
+  endif
+endif
+
+#############
+##  L T O  ##
+#############
+
+# Disable modules that don't work with Link Time Optimizations. Split up by arch.
+DISABLE_LTO_arm := libLLVMScalarOpts libjni_latinime_common_static libjni_latinime adbd nit libnetd_client libblas
+DISABLE_THINLTO_arm :=
+DISABLE_LTO_arm64 :=  libLLVMScalarOpts libjni_latinime_common_static libjni_latinime adbd nit libnetd_client libblas
+DISABLE_THINLTO_arm64 :=
+
+# Set DISABLE_LTO and DISABLE_THINLTO based on arch
+DISABLE_LTO := \
+  $(DISABLE_LTO_$(TARGET_ARCH)) \
+  $(DISABLE_DTC) \
+  $(LOCAL_DISABLE_LTO)
+DISABLE_THINLTO := \
+  $(DISABLE_THINLTO_$(TARGET_ARCH)) \
+  $(LOCAL_DISABLE_THINLTO)
+
+# Enable LTO (currently disabled due to issues in linking, enable at your own risk)
+ifeq ($(ENABLE_DTC_LTO),true)
+  ifeq ($(my_clang),true)
+    ifndef LOCAL_IS_HOST_MODULE
+      ifneq ($(LOCAL_MODULE_CLASS),STATIC_LIBRARIES)
+        ifneq (1,$(words $(filter $(DISABLE_LTO),$(LOCAL_MODULE))))
+          ifneq (1,$(words $(filter $(DISABLE_THINLTO),$(LOCAL_MODULE))))
+            my_cflags += -flto=thin -fuse-ld=gold
+            my_ldflags += -flto=thin -fuse-ld=gold
+          else
+            my_cflags += -flto -fuse-ld=gold
+            my_ldflags += -flto -fuse-ld=gold
+          endif
+        else
+          my_cflags += -fno-lto -fuse-ld=gold
+          my_ldflags += -fno-lto -fuse-ld=gold
+        endif
+      endif
     endif
   endif
 endif

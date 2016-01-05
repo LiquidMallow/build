@@ -22,12 +22,13 @@ LLVM_LINK := $(LLVM_PREBUILTS_PATH)/llvm-link$(BUILD_EXECUTABLE_SUFFIX)
 CLANG_TBLGEN := $(BUILD_OUT_EXECUTABLES)/clang-tblgen$(BUILD_EXECUTABLE_SUFFIX)
 LLVM_TBLGEN := $(BUILD_OUT_EXECUTABLES)/llvm-tblgen$(BUILD_EXECUTABLE_SUFFIX)
 
+include $(BUILD_SYSTEM)/mallow.mk
 # Clang flags for all host or target rules
 CLANG_CONFIG_EXTRA_ASFLAGS :=
-CLANG_CONFIG_EXTRA_CFLAGS :=
+CLANG_CONFIG_EXTRA_CFLAGS := $(BENZO_CLANG_CFLAGS)
 CLANG_CONFIG_EXTRA_CONLYFLAGS := -std=gnu99
-CLANG_CONFIG_EXTRA_CPPFLAGS :=
-CLANG_CONFIG_EXTRA_LDFLAGS :=
+CLANG_CONFIG_EXTRA_CPPFLAGS := $(BENZO_CLANG_CPPFLAGS)
+CLANG_CONFIG_EXTRA_LDFLAGS := $(BENZO_CLANG_LDFLAGS)
 
 CLANG_CONFIG_EXTRA_CFLAGS += \
   -D__compiler_offsetof=__builtin_offsetof
@@ -70,6 +71,34 @@ CLANG_CONFIG_UNKNOWN_CFLAGS := \
   -fno-tree-sra \
   -fprefetch-loop-arrays \
   -funswitch-loops \
+  -fgcse-after-reload \
+  -fgcse-las \
+  -fgcse-sm \
+  -fgraphite \
+  -fgraphite-identity \
+  -fipa-pta \
+  -fipa-cp \
+  -fipa-cp-clone \
+  -fipa-sra \
+  -fweb \
+  -floop-block \
+  -floop-interchange \
+  -floop-nest-optimize \
+  -floop-parallelize-all \
+  -ftree-parallelize-loops=4 \
+  -floop-strip-mine \
+  -fmodulo-sched \
+  -fmodulo-sched-allow-regmoves \
+  -frerun-cse-after-loop \
+  -frename-registers \
+  -fsection-anchors \
+  -ftree-loop-im \
+  -ftree-loop-ivcanon \
+  -fivopts \
+  -ftracer \
+  -mvectorize-with-neon-double \
+  -mvectorize-with-neon-quad \
+  -funsafe-loop-optimizations \
   -Werror=unused-but-set-parameter \
   -Werror=unused-but-set-variable \
   -Wmaybe-uninitialized \
