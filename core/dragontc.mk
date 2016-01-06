@@ -18,13 +18,16 @@ POLLY := -mllvm -polly \
   -mllvm -polly-parallel-force \
   -mllvm -polly-allow-nonaffine=1\
   -mllvm -polly-ast-detect-parallel \
-  -mllvm -polly-no-early-exit \
   -mllvm -polly-vectorizer=polly \
   -mllvm -polly-opt-fusion=max \
   -mllvm -polly-opt-maximize-bands=yes \
   -mllvm -polly-run-dce
 
 # Enable version specific Polly flags.
+ifeq ($(LLVM_PREBUILTS_VERSION),3.7)
+  POLLY += -mllvm -polly-no-early-exit
+endif
+
 ifeq ($(LLVM_PREBUILTS_VERSION),3.8)
   POLLY += -mllvm -polly-position=after-loopopt
 endif
@@ -67,6 +70,22 @@ DISABLE_POLLY_arm64 := \
   libRS \
   libstagefright_mpeg2ts \
   bcc_strip_attr
+
+ifeq ($(LLVM_PREBUILTS_VERSION),3.8)
+  DISABLE_POLLY_arm64 += \
+	libLLVMARMCodeGen \
+	libLLVMAnalysis \
+	libLLVMScalarOpts \
+	libLLVMCore \
+	libLLVMInstrumentation \
+	libLLVMipo \
+	libLLVMMC \
+	libLLVMSupport \
+	libLLVMTransformObjCARC \
+	libLLVMVectorize \
+	libgui \
+	libvixl
+endif
 
 # Set DISABLE_POLLY based on arch
 DISABLE_POLLY := \
