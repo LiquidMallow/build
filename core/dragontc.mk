@@ -28,13 +28,13 @@ ifeq ($(LLVM_PREBUILTS_VERSION),3.7)
   POLLY += -mllvm -polly-no-early-exit
 endif
 
-ifeq ($(LLVM_PREBUILTS_VERSION),3.8)
+ifeq ($(LLVM_PREBUILTS_VERSION),3.9 3.9)
   POLLY += -mllvm -polly-position=after-loopopt
 endif
 
 # Disable modules that don't work with DragonTC. Split up by arch.
-DISABLE_DTC_arm :=
-DISABLE_DTC_arm64 :=
+DISABLE_DTC_arm := libm
+DISABLE_DTC_arm64 := libm
 
 # Set DISABLE_DTC based on arch
 DISABLE_DTC := \
@@ -71,7 +71,7 @@ DISABLE_POLLY_arm64 := \
   libstagefright_mpeg2ts \
   bcc_strip_attr
 
-ifeq ($(LLVM_PREBUILTS_VERSION),3.8)
+ifeq ($(LLVM_PREBUILTS_VERSION),3.8 3.9)
   DISABLE_POLLY_arm64 += \
 	libLLVMARMCodeGen \
 	libLLVMAnalysis \

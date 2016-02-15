@@ -1,7 +1,7 @@
 ## Clang configurations.
 
 # Set LLVM version for DragonTC
-TARGET_DRAGONTC_VERSION := 3.8
+TARGET_DRAGONTC_VERSION := 3.9
 
 ifeq ($(TARGET_DRAGONTC_VERSION),)
 LLVM_PREBUILTS_VERSION := 3.6
