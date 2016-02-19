@@ -28,7 +28,7 @@ ifeq ($(LLVM_PREBUILTS_VERSION),3.7)
   POLLY += -mllvm -polly-no-early-exit
 endif
 
-ifeq ($(LLVM_PREBUILTS_VERSION),3.9 3.9)
+ifeq ($(filter $(LLVM_PREBUILTS_VERSION), 3.8 3.9),)
   POLLY += -mllvm -polly-position=after-loopopt
 endif
 
