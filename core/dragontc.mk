@@ -33,7 +33,7 @@ ifeq ($(filter $(LLVM_PREBUILTS_VERSION), 3.8 3.9),)
 endif
 
 # Disable modules that don't work with DragonTC. Split up by arch.
-DISABLE_DTC_arm := libm
+DISABLE_DTC_arm :=
 DISABLE_DTC_arm64 := libm
 
 # Set DISABLE_DTC based on arch
@@ -92,6 +92,11 @@ DISABLE_POLLY := \
   $(DISABLE_POLLY_$(TARGET_ARCH)) \
   $(DISABLE_DTC) \
   $(LOCAL_DISABLE_POLLY)
+  
+# Include ARM Mode if requested
+ifeq ($(USE_ARM_MODE),true)
+  include $(BUILD_SYSTEM)/arm.mk
+endif
 
 # Make sure that the current module is not blacklisted. Polly is not
 # used on host modules to reduce build time and unnecessary hassle.
