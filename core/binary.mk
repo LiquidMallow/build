@@ -192,7 +192,9 @@ endif
 endif
 #####
 
+################
 # CORTEX_TUNINGS
+################
 ifeq ($(CORTEX_TUNINGS),true)
 ifndef LOCAL_IS_HOST_MODULE
 ifneq (1,$(words $(filter $(LOCAL_DISABLE_CORTEX), $(LOCAL_MODULE))))
@@ -213,6 +215,49 @@ endif
 endif
 endif
 endif
+#####
+
+##########
+# USE_PIPE
+##########
+ifeq ($(USE_PIPE),true)
+ifneq (1,$(words $(filter $(LOCAL_DISABLE_PIPE), $(LOCAL_MODULE))))
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += \
+	-pipe
+else
+LOCAL_CONLYFLAGS := \
+	-pipe
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS += \
+	-pipe
+else
+LOCAL_CPPFLAGS := \
+	-pipe
+endif
+endif
+endif
+#####
+
+#################
+# MEMORY SANITIZE
+#################
+ifeq ($(ENABLE_SANITIZE),true)
+ ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+  ifneq ($(strip $(LOCAL_CLANG)),true)
+   ifeq ($(filter $(DISABLE_SANITIZE_LEAK), $(LOCAL_MODULE)),)
+    ifdef LOCAL_CONLYFLAGS
+     LOCAL_CONLYFLAGS += -fsanitize=leak
+    else
+     LOCAL_CONLYFLAGS := -fsanitize=leak
+    endif
+   endif
+  endif
+ endif
+endif
+#####
 
 # The following LOCAL_ variables will be modified in this file.
 # Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,

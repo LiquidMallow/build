@@ -220,3 +220,20 @@ GRAPHITE_FLAGS := \
 	-floop-interchange \
 	-floop-strip-mine \
 	-floop-block
+
+######
+# Pipe
+######
+LOCAL_DISABLE_PIPE := \
+	libc_dns \
+	libc_tzcode \
+	$(NO_OPTIMIZATIONS)
+
+#################
+# Memory Sanitize
+#################
+DISABLE_SANITIZE_LEAK := \
+	libc_dns \
+	libc_tzcode \
+	$(NOOP_BLUETOOTH) \
+	$(NO_OPTIMIZATIONS)
