@@ -1,4 +1,4 @@
-# Copyright (C) 2015 DragonTC
+# Copyright (C) 2015-2016 DragonTC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,25 +16,30 @@
 POLLY := -mllvm -polly \
   -mllvm -polly-parallel -lgomp \
   -mllvm -polly-parallel-force \
-  -mllvm -polly-allow-nonaffine=1\
-  -mllvm -polly-ast-detect-parallel \
+  -mllvm -polly-ast-use-context \
   -mllvm -polly-vectorizer=polly \
   -mllvm -polly-opt-fusion=max \
   -mllvm -polly-opt-maximize-bands=yes \
   -mllvm -polly-run-dce
 
 # Enable version specific Polly flags.
-ifeq ($(LLVM_PREBUILTS_VERSION),3.7)
-  POLLY += -mllvm -polly-no-early-exit
+ifeq (1,$(words $(filter 3.7 3.8 3.9,$(LLVM_PREBUILTS_VERSION))))
+  POLLY += -mllvm -polly-dependences-computeout=0 \
+    -mllvm -polly-dependences-analysis-type=value-based
 endif
-
-ifeq ($(filter $(LLVM_PREBUILTS_VERSION), 3.8 3.9),)
-  POLLY += -mllvm -polly-position=after-loopopt
+ifeq (1,$(words $(filter 3.8 3.9,$(LLVM_PREBUILTS_VERSION))))
+  POLLY += -mllvm -polly-position=after-loopopt \
+    -mllvm -polly-run-inliner \
+    -mllvm -polly-detect-keep-going \
+    -mllvm -polly-rtc-max-arrays-per-group=40 \
+    -mllvm -polly-register-tiling
+else
+  POLLY += -mllvm -polly-no-early-exit
 endif
 
 # Disable modules that don't work with DragonTC. Split up by arch.
 DISABLE_DTC_arm :=
-DISABLE_DTC_arm64 := libm
+DISABLE_DTC_arm64 := libm libblasV8 libperfprofdcore libperfprofdutils perfprofd libjavacrypto libscrypt_static
 
 # Set DISABLE_DTC based on arch
 DISABLE_DTC := \
@@ -54,6 +59,7 @@ ENABLE_DTC := \
 DISABLE_POLLY_arm :=
 
 DISABLE_POLLY_arm64 := \
+  libbccSupport \
   libpng \
   libfuse \
   libLLVMAsmParser \
@@ -64,15 +70,20 @@ DISABLE_POLLY_arm64 := \
   libLLVMSupport \
   libLLVMSelectionDAG \
   libLLVMTransformUtils \
-  libF77blas \
-  libbccSupport \
-  libblas \
-  libRS \
   libstagefright_mpeg2ts \
   bcc_strip_attr
 
-ifeq ($(LLVM_PREBUILTS_VERSION),3.8 3.9)
+# Add version specific disables.
+ifeq (1,$(words $(filter 3.8 3.9,$(LLVM_PREBUILTS_VERSION))))
   DISABLE_POLLY_arm64 += \
+	healthd \
+	libandroid_runtime \
+	libblas \
+	libF77blas \
+	libF77blasV8 \
+	libgui \
+	libjni_latinime_common_static \
+	libLLVMAArch64CodeGen \
 	libLLVMARMCodeGen \
 	libLLVMAnalysis \
 	libLLVMScalarOpts \
@@ -83,8 +94,14 @@ ifeq ($(LLVM_PREBUILTS_VERSION),3.8 3.9)
 	libLLVMSupport \
 	libLLVMTransformObjCARC \
 	libLLVMVectorize \
-	libgui \
-	libvixl
+	libminui \
+	libprotobuf-cpp-lite \
+	libRS \
+	libRSCpuRef \
+	libunwind_llvm \
+	libvixl \
+	libvterm \
+	libxml2
 endif
 
 # Set DISABLE_POLLY based on arch
