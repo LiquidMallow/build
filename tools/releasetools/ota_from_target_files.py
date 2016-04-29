@@ -589,10 +589,6 @@ reboot_now("%(bcb_dev)s", "recovery");
 else if get_stage("%(bcb_dev)s") == "3/3" then
 """ % bcb_dev)
 
-  # Dump fingerprints
-  script.Print("Target: %s" % CalculateFingerprint(
-      oem_props, oem_dict, OPTIONS.info_dict))
-
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
 
@@ -603,6 +599,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
       common.ZipWriteStr(output_zip, "system/bin/backuptool.functions",
                      ""+input_zip.read("SYSTEM/bin/backuptool.functions"))
     script.Mount("/system")
+    script.Print("Starting Backup...")
     script.RunBackup("backup")
     script.Unmount("/system")
 
@@ -683,12 +680,13 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
   common.ZipWriteStr(output_zip, "boot.img", boot_img.data)
-  
+
   if OPTIONS.backuptool:
     script.ShowProgress(0.02, 10)
     if block_based:
       script.Mount("/system")
     script.RunBackup("restore")
+    script.Print("Restoring Backup...")
     if block_based:
       script.Unmount("/system")
 
@@ -705,6 +703,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.FlashSuperSU()
 
   script.ShowProgress(0.05, 5)
+  script.Print("Flashing Kernel...")
   script.WriteRawImage("/boot", "boot.img")
 
   script.ShowProgress(0.2, 10)
@@ -719,6 +718,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     script.Mount("/system")
 
   script.UnmountAll()
+  script.Print("Install Complete!")  
 
   if OPTIONS.wipe_user_data:
     script.ShowProgress(0.1, 10)
@@ -742,7 +742,6 @@ endif;
 
 def WritePolicyConfig(file_name, output_zip):
   common.ZipWrite(output_zip, file_name, os.path.basename(file_name))
-
 
 def WriteMetadata(metadata, output_zip):
   common.ZipWriteStr(output_zip, "META-INF/com/android/metadata",
@@ -1628,8 +1627,8 @@ def main(argv):
                                  "oem_settings=",
                                  "verify",
                                  "no_fallback_to_full",
-								  "stash_threshold=",
-                             "override_device="], extra_option_handler=option_handler)
+				 "stash_threshold=",
+                                 "override_device="], extra_option_handler=option_handler)
 
   if len(args) != 2:
     common.Usage(__doc__)
