@@ -595,7 +595,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   script.AppendExtra("ifelse(is_mounted(\"/system\"), unmount(\"/system\"));")
   device_specific.FullOTA_InstallBegin()
-  
+
   if OPTIONS.backuptool:
     if block_based:
       common.ZipWriteStr(output_zip, "system/bin/backuptool.sh",
@@ -612,6 +612,13 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     system_progress -= 0.1
   if HasVendorPartition(input_zip):
     system_progress -= 0.1
+
+  model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
+  build = GetBuildProp("ro.build.date", OPTIONS.info_dict)
+  script.Print("*********************************************");
+  script.Print("* MallowRom for %s                     *"%(model));
+  script.Print("* Compiled on: %s *"%(build));
+  script.Print("*********************************************");
 
   if "selinux_fc" in OPTIONS.info_dict:
     WritePolicyConfig(OPTIONS.info_dict["selinux_fc"], output_zip)
