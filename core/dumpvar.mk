@@ -1,3 +1,13 @@
+ifneq ($(BUILD_WITH_COLORS),0)
+  CL_RED="\033[31m"
+  CL_GRN="\033[32m"
+  CL_YLW="\033[33m"
+  CL_BLU="\033[34m"
+  CL_MAG="\033[35m"
+  CL_CYN="\033[36m"
+  CL_RST="\033[0m"
+endif
+
 # ---------------------------------------------------------------
 # the setpath shell function in envsetup.sh uses this to figure out
 # what to add to the path given the config we have chosen.
@@ -64,9 +74,10 @@ endif # CALLED_FROM_SETUP
 
 ifneq ($(PRINT_BUILD_CONFIG),)
 HOST_OS_EXTRA:=$(shell python -c "import platform; print(platform.platform())")
-$(info ============================================)
+$(info $(shell echo -e ${CL_CYN}====================================${CL_RST}))
 $(info   PLATFORM_VERSION_CODENAME=$(PLATFORM_VERSION_CODENAME))
 $(info   PLATFORM_VERSION=$(PLATFORM_VERSION))
+$(info   MALLOW_VERSION=$(MALLOW_VERSION))
 $(info   TARGET_PRODUCT=$(TARGET_PRODUCT))
 $(info   TARGET_BUILD_VARIANT=$(TARGET_BUILD_VARIANT))
 $(info   TARGET_BUILD_TYPE=$(TARGET_BUILD_TYPE))
@@ -94,12 +105,53 @@ else
 $(info   TARGET_KERNEL_TOOLCHAIN=$(TARGET_GCC_VERSION))
 endif
 endif
-
+$(info $(shell echo -e ${CL_CYN}====================================${CL_RST}))
 $(info   HOST_ARCH=$(HOST_ARCH))
 $(info   HOST_OS=$(HOST_OS))
 $(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
 $(info   HOST_BUILD_TYPE=$(HOST_BUILD_TYPE))
 $(info   BUILD_ID=$(BUILD_ID))
 $(info   OUT_DIR=$(OUT_DIR))
-$(info ============================================)
+$(info $(shell echo -e ${CL_CYN}====================================${CL_RST}))
+ifdef CLANG_O3
+$(info   CLANG_O3=$(CLANG_O3))
+else
+$(info   CLANG_O3=false)
+endif
+ifdef CORTEX_TUNINGS
+$(info   CORTEX_TUNINGS=$(CORTEX_TUNINGS))
+else
+$(info   CORTEX_TUNINGS=false)
+endif
+ifdef ENABLE_GCCONLY
+$(info   ENABLE_GCCONLY=$(ENABLE_GCCONLY))
+else
+$(info   ENABLE_GCCONLY=false)
+endif
+ifdef ENABLE_SANITIZE
+$(info   ENABLE_SANITIZE=$(ENABLE_SANITIZE))
+else
+$(info   ENABLE_SANITIZE=false)
+endif
+ifdef GRAPHITE_OPTS
+$(info   GRAPHITE_OPTS=$(GRAPHITE_OPTS))
+else
+$(info   GRAPHITE_OPTS=false)
+endif
+ifdef KRAIT_TUNINGS
+$(info   KRAIT_TUNINGS=$(KRAIT_TUNINGS))
+else
+$(info   KRAIT_TUNINGS=false)
+endif
+ifdef STRICT_ALIASING
+$(info   STRICT_ALIASING=$(STRICT_ALIASING))
+else
+$(info   STRICT_ALIASING=false)
+endif
+ifdef USE_PIPE
+$(info   USE_PIPE=$(USE_PIPE))
+else
+$(info   USE_PIPE=false)
+endif
+$(info $(shell echo -e ${CL_CYN}====================================${CL_RST}))
 endif
