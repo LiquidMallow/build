@@ -1596,8 +1596,9 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-.PHONY: otapackage
+.PHONY: otapackage mallow
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
+mallow: otapackage
 
 	$(hide) $(MD5SUM) $(INTERNAL_OTA_PACKAGE_TARGET) > $(INTERNAL_OTA_PACKAGE_TARGET).md5sum
 	@echo -e ${CL_CYN}"=============== $$(echo $(TARGET_PRODUCT) | sed 's/\([a-z]\)\([a-zA-Z0-9]*\)/\u\1\2/g' | cut -d'_' -f1) OTA package: COMPLETE ==============="${CL_RST}
