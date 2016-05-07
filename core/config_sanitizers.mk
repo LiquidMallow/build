@@ -43,6 +43,12 @@ ifeq ($(my_sanitize),never)
   my_sanitize :=
 endif
 
+ifneq ($(filter safe-stack,$(my_sanitize)),)
+  ifeq ($(my_32_64_bit_suffix),32)
+    my_sanitize := $(filter-out safe-stack,$(my_sanitize))
+  endif
+endif
+
 # Sanitizers can only be used with clang.
 ifneq ($(my_clang),true)
   ifneq ($(my_sanitize),)
