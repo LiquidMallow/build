@@ -701,6 +701,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.FlashV4A()
 
   script.ShowProgress(0.05, 5)
+  script.Print("Flashing Kernel...")
   script.WriteRawImage("/boot", "boot.img")
 
   script.Print("Flashing Superuser...")
@@ -709,6 +710,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.FlashSuperSU()
 
   script.ShowProgress(0.2, 10)
+  script.Print("Install Completed!")
   device_specific.FullOTA_InstallEnd()
 
   if OPTIONS.extra_script is not None:
