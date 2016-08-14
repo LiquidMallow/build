@@ -619,6 +619,13 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   if HasVendorPartition(input_zip):
     system_progress -= 0.1
 
+  model = GetBuildProp("ro.product.model", OPTIONS.info_dict)
+  build = GetBuildProp("ro.build.date", OPTIONS.info_dict)
+  script.Print("*********************************************");
+  script.Print("* MallowRom for %s                     *"%(model));
+  script.Print("* Compiled on: %s *"%(build));
+  script.Print("*********************************************");
+
   if "selinux_fc" in OPTIONS.info_dict:
     WritePolicyConfig(OPTIONS.info_dict["selinux_fc"], output_zip)
 
