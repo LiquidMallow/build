@@ -113,6 +113,65 @@ $(info   HOST_OS_EXTRA=$(HOST_OS_EXTRA))
 $(info   OUT_DIR=$(OUT_DIR))
 $(info   BUILD_ID=$(BUILD_ID))
 $(info $(shell echo -e ${CL_CYN}====================================${CL_RST}))
-$(info   OPTIMIZATIONS=$(GCC_OPTIMIZATION_LEVELS))
+ifdef TARGET_DRAGONTC_VERSION
+$(info   CLANG_03=true)
+else
+$(info   CLANG_03=false)
+endif
+ifdef CORTEX_TUNINGS
+$(info   CORTEX_TUNINGS=$(CORTEX_TUNINGS))
+else
+$(info   CORTEX_TUNINGS=false)
+endif
+ifdef ENABLE_ARM_MODE
+$(info   ENABLE_ARM_MODE=$(ENABLE_ARM_MODE))
+else
+$(info   ENABLE_ARM_MODE=false)
+endif
+ifdef ENABLE_EXTRAGCC
+$(info   ENABLE_EXTRAGCC=$(ENABLE_EXTRAGCC))
+else
+$(info   ENABLE_EXTRAGCC=false)
+endif
+ifdef ENABLE_GOMP
+$(info   ENABLE_GOMP=$(ENABLE_GOMP))
+else
+$(info   ENABLE_GOMP=false)
+endif
+ifdef ENABLE_IPA_ANALYSER
+$(info   ENABLE_IPA_ANALYSER=$(ENABLE_IPA_ANALYSER))
+else
+$(info   ENABLE_IPA_ANALYSER=false)
+endif
+ifdef ENABLE_PTHREAD
+$(info   ENABLE_PTHREAD=$(ENABLE_PTHREAD))
+else
+$(info   ENABLE_PTHREAD=false)
+endif
+ifdef ENABLE_SANITIZE
+$(info   ENABLE_SANITIZE=$(ENABLE_SANITIZE))
+else
+$(info   ENABLE_SANITIZE=false)
+endif
+ifdef GRAPHITE_OPTS
+$(info   GRAPHITE_OPTS=$(GRAPHITE_OPTS))
+else
+$(info   GRAPHITE_OPTS=false)
+endif
+ifdef KRAIT_TUNINGS
+$(info   KRAIT_TUNINGS=$(KRAIT_TUNINGS))
+else
+$(info   KRAIT_TUNINGS=false)
+endif
+ifdef STRICT_ALIASING
+$(info   STRICT_ALIASING=$(STRICT_ALIASING))
+else
+$(info   STRICT_ALIASING=false)
+endif
+ifdef TARGET_USE_PIPE
+$(info   TARGET_USE_PIPE=$(TARGET_USE_PIPE))
+else
+$(info   TARGET_USE_PIPE=false)
+endif
 $(info $(shell echo -e ${CL_CYN}====================================${CL_RST}))
 endif
