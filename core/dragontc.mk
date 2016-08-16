@@ -75,7 +75,8 @@ DISABLE_POLLY_arm := \
   libRSSupport \
   libstagefright_omx \
   libRS	\
-  libRSDrive
+  libRSDrive \
+  libv8
 
 DISABLE_POLLY_arm64 := \
   libbccSupport \
@@ -117,7 +118,7 @@ ifeq (1,$(words $(filter 3.8 3.9 4.0,$(LLVM_PREBUILTS_VERSION))))
 	libprotobuf-cpp-lite \
 	libRS \
 	libRSCpuRef \
-        libstagefright_omx \
+    libstagefright_omx \
 	libunwind_llvm \
 	libv8 \
 	libvixl \
