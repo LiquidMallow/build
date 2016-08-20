@@ -179,9 +179,9 @@ ifeq ($(TARGET_ARCH),arm64)
     endif
     ifneq ($(TARGET_GCC_VERSION_ARM64),)
       ifeq ($(HOST_OS),darwin)
-        ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuilts/gcc/darwin-x86/aarch64/aarch64-$(TARGET_GCC_VERSION_ARM64)/bin/aarch64-linux-android-"
+        ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuilts/gcc/darwin-x86/aarch64/aarch64-$(TARGET_GCC_VERSION_ARM64)/bin/aarch64-"
       else
-        ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuilts/gcc/linux-x86/aarch64/aarch64-$(TARGET_GCC_VERSION_ARM64)/bin/aarch64-linux-android-"
+        ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ANDROID_BUILD_TOP)/prebuilts/gcc/linux-x86/aarch64/aarch64-$(TARGET_GCC_VERSION_ARM64)/bin/aarch64-"
       endif
     else
       ARM_CROSS_COMPILE:=CROSS_COMPILE="$(ccache) $(ARM_EABI_TOOLCHAIN)/aarch64-linux-android-"
