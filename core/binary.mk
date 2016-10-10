@@ -30,168 +30,6 @@ else
   endif
 endif
 
-# Copyright (C) 2014-2015 UBER
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
-#################
-# STRICT_ALIASING
-#################
-ifeq ($(STRICT_ALIASING),true)
-ifeq (1,$(words $(filter $(LOCAL_FORCE_DISABLE_STRICT),$(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	$(DISABLE_STRICT)
-else
-LOCAL_CONLYFLAGS := \
-	$(DISABLE_STRICT)
-endif
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	$(DISABLE_STRICT)
-else
-LOCAL_CPPFLAGS := \
-	$(DISABLE_STRICT)
-endif
-endif
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_STRICT),$(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	$(STRICT_ALIASING_FLAGS)
-else
-LOCAL_CONLYFLAGS := \
-	$(STRICT_ALIASING_FLAGS)
-endif
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	$(STRICT_ALIASING_FLAGS)
-else
-LOCAL_CPPFLAGS := \
-	$(STRICT_ALIASING_FLAGS)
-endif
-ifndef LOCAL_CLANG
-LOCAL_CONLYFLAGS += \
-	$(STRICT_GCC_LEVEL)
-LOCAL_CPPFLAGS += \
-	$(STRICT_GCC_LEVEL)
-else
-LOCAL_CONLYFLAGS += \
-	$(STRICT_CLANG_LEVEL)
-LOCAL_CPPFLAGS += \
-	$(STRICT_CLANG_LEVEL)
-endif
-endif
-else
-ifeq (1,$(words $(filter $(LOCAL_FORCE_DISABLE_STRICT),$(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	$(DISABLE_STRICT)
-else
-LOCAL_CONLYFLAGS := \
-	$(DISABLE_STRICT)
-endif
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	$(DISABLE_STRICT)
-else
-LOCAL_CPPFLAGS := \
-	$(DISABLE_STRICT)
-endif
-endif
-endif
-#####
-
-###############
-# KRAIT_TUNINGS
-###############
-ifeq ($(KRAIT_TUNINGS),true)
-ifndef LOCAL_IS_HOST_MODULE
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_KRAIT), $(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	$(KRAIT_FLAGS)
-else
-LOCAL_CONLYFLAGS := \
-	$(KRAIT_FLAGS)
-endif
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	$(KRAIT_FLAGS)
-else
-LOCAL_CPPFLAGS := \
-	$(KRAIT_FLAGS)
-endif
-endif
-endif
-endif
-#####
-
-################
-# ENABLE_GCCONLY
-################
-ifeq ($(ENABLE_GCCONLY),true)
-ifndef LOCAL_IS_HOST_MODULE
-ifeq ($(LOCAL_CLANG),)
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_GCCONLY), $(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	$(GCC_ONLY)
-else
-LOCAL_CONLYFLAGS := \
-	$(GCC_ONLY)
-endif
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	$(GCC_ONLY)
-else
-LOCAL_CPPFLAGS := \
-	$(GCC_ONLY)
-endif
-endif
-endif
-endif
-endif
-#####
-
-###############
-# GRAPHITE_OPTS
-###############
-ifeq ($(GRAPHITE_OPTS),true)
-ifndef LOCAL_IS_HOST_MODULE
-ifeq ($(LOCAL_CLANG),)
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_GRAPHITE), $(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	$(GRAPHITE_FLAGS)
-else
-LOCAL_CONLYFLAGS := \
-	$(GRAPHITE_FLAGS)
-endif
-
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	$(GRAPHITE_FLAGS)
-else
-LOCAL_CPPFLAGS := \
-	$(GRAPHITE_FLAGS)
-endif
-endif
-endif
-endif
-endif
-#####
-
 # The following LOCAL_ variables will be modified in this file.
 # Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,
 # we can't modify them in place.
@@ -414,12 +252,13 @@ endif
 
 my_cppflags := $(my_cpp_std_version) $(my_cppflags)
 
-
 ifeq ($(SDCLANG),true)
     ifeq ($(my_sdclang),)
         my_sdclang := true
     endif
 endif
+
+include $(BUILD_SYSTEM)/uber.mk
 
 # arch-specific static libraries go first so that generic ones can depend on them
 my_static_libraries := $(LOCAL_STATIC_LIBRARIES_$($(my_prefix)$(LOCAL_2ND_ARCH_VAR_PREFIX)ARCH)) $(LOCAL_STATIC_LIBRARIES_$(my_32_64_bit_suffix)) $(my_static_libraries)
@@ -497,17 +336,16 @@ my_target_global_conlyflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL
 my_target_global_cppflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_CPPFLAGS)
 my_target_global_ldflags := $($(LOCAL_2ND_ARCH_VAR_PREFIX)CLANG_TARGET_GLOBAL_LDFLAGS)
     ifeq ($(my_sdclang),true)
-        SDCLANG_PRECONFIGURED_FLAGS := -Wno-vectorizer-no-neon
+        SDCLANG_PRECONFIGURED_FLAGS := -Wno-vectorizer-no-neon -O3
 
         ifeq ($(LOCAL_SDCLANG_LTO), true)
         ifneq ($(LOCAL_MODULE_CLASS), STATIC_LIBRARIES)
-            SDCLANG_PRECONFIGURED_FLAGS += -flto
+            SDCLANG_PRECONFIGURED_FLAGS += -fuse-ld=qcld -flto
             my_target_global_ldflags += -fuse-ld=qcld -flto
         endif
         endif
         my_target_global_cflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
-        my_target_global_conlyflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
-        my_target_global_cppflags += $(SDCLANG_COMMON_FLAGS) $(SDCLANG_PRECONFIGURED_FLAGS)
+        SDCLANG_PRECONFIGURED_FLAGS :=
 
         ifeq ($(strip $(my_cc)),)
             my_cc := $(SDCLANG_PATH)/clang
@@ -766,7 +604,7 @@ endif
 
 # Turn on all warnings and warnings as errors for RS compiles.
 # This can be disabled with LOCAL_RENDERSCRIPT_FLAGS := -Wno-error
-renderscript_flags := -Wall -Werror
+# renderscript_flags := -Wall -Werror
 renderscript_flags += $(LOCAL_RENDERSCRIPT_FLAGS)
 # -m32 or -m64
 renderscript_flags += -m$(my_32_64_bit_suffix)
