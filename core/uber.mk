@@ -72,6 +72,7 @@ DISABLE_POLLY_O3 := \
 	bluetooth.mapsapi \
         bluetooth.default \
         bluetooth.mapsapi \
+	libart \
         libart-compiler \
         libbluetooth_jni \
         libbt% \
@@ -87,44 +88,30 @@ DISABLE_POLLY_O3 := \
 # Disable modules that dont work with Polly. Split up by arch.
 DISABLE_POLLY_arm := \
 	healthd \
-	libcrypto_static \
-	libicuuc \
-	libinputflinger \
-	libjni_snapcammosaic \
-	libjpeg_static \
-	recovery
-
-DISABLE_POLLY_arm64 := \
-	healthd \
-	libart \
 	libaudioflinger \
-	libaudioutils \
 	libavcdec \
         libavcenc \
 	libbnnmlowp \
 	libcrypto \
 	libcrypto_static \
 	libF77blas \
-        libFFTEm \
+	libFFTEm \
 	libFraunhoferAAC \
 	libicuuc \
 	libinputflinger \
+	libjni_filtershow_filters \
 	libjni_snapcammosaic \
 	libjpeg_static \
 	libLLVM% \
-	libmedia_jni \
 	libmpeg2dec \
 	libmusicbundle \
 	libopus \
 	libpdfium% \
 	libreverb \
 	libRS_internal \
-	libRSCpuRef \
-	libscrypt_static \
-	libskia_static \
 	libsonic \
+	libskia_static \
 	libstagefright% \
-	libsvoxpico \
 	libv8 \
 	libvpx \
 	libwebp-decode \
@@ -132,9 +119,17 @@ DISABLE_POLLY_arm64 := \
 	libwebrtc% \
 	recovery
 
+DISABLE_POLLY_arm64 := \
+	$(DISABLE_POLLY_arm) \
+	libaudioutils \
+	libmedia_jni \
+	libRSCpuRef \
+	libscrypt_static \
+	libsvoxpico
+
 # Set DISABLE_POLLY based on arch
 LOCAL_DISABLE_POLLY := \
-  $(DISABLE_POLLY_$(TARGET_ARCH))) \
+  $(DISABLE_POLLY_$(TARGET_ARCH)) \
   $(DISABLE_POLLY_O3)
 
 # Set POLLY based on DISABLE_POLLY
