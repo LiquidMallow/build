@@ -106,7 +106,6 @@ DISABLE_POLLY_arm := \
 	libmpeg2dec \
 	libmusicbundle \
 	libopus \
-	libpdfium% \
 	libreverb \
 	libRS_internal \
 	libsonic \
