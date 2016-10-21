@@ -106,6 +106,7 @@ DISABLE_POLLY_arm := \
 	libmpeg2dec \
 	libmusicbundle \
 	libopus \
+	libpdfium% \
 	libreverb \
 	libRS_internal \
 	libsonic \
@@ -137,7 +138,11 @@ ifeq (1,$(words $(filter $(LOCAL_DISABLE_POLLY),$(LOCAL_MODULE))))
 endif
 
 ifeq ($(my_sdclang), true)
+  ifeq ($(my_clang),true)
     my_cflags += -Qunused-arguments
+  else
+    my_cflags += -Wno-unknown-warning
+  endif
 else ifeq ($(my_clang),true)
   ifndef LOCAL_IS_HOST_MODULE
     my_cflags := $(filter-out -g,$(my_cflags))
@@ -146,7 +151,7 @@ else ifeq ($(my_clang),true)
     my_cflags += $(POLLY) -Qunused-arguments
   endif
 else
-    my_cflags += -Wno-unknown-warning
+  my_cflags += -Wno-unknown-warning
 endif
 
 ifeq ($(STRICT_ALIASING),true)
