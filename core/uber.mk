@@ -117,6 +117,7 @@ DISABLE_POLLY_arm := \
 	libwebp-decode \
         libwebp-encode \
 	libwebrtc% \
+	libyuv_static \
 	recovery
 
 DISABLE_POLLY_arm64 := \
